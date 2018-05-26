@@ -26,6 +26,24 @@
     margin: 15px;
 }
 
+.recommendations {
+    position: absolute;
+    top: 100px;
+    left: 27px;
+    height: 750px;
+    width: 350px;
+    z-index:10;
+    background-color:white;
+}
+
+.recommendation {
+    width:330px;
+    height:300px;
+    margin:10px;
+    background-color: gray;
+}
+
+
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
     /* Hide captions */
