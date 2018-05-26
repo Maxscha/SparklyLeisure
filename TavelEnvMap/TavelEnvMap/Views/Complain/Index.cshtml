@@ -1,25 +1,71 @@
 ﻿@model TavelEnvMap.Models.ComplainModel
 
-<h2>You dont like your current Situation? Complain at the relevant Politican</h2>
+<div class="container">
 
-@foreach(var politican in Model.Politician)
-{
-    <div>
-        This is one of the responsible Politicans for this Area. You would like to Complain? Contact him in one of the following channels:
-        # Twitter
-        # Facebook
-        # Phonenumber
-        # Adress
-
-        To much work? Press the complain Button with one Challenge
-        #Twitter
-        #Facebook
-
-        You really want to complain?
-        - Here is a prewritten Letter. Just print, sign and send it.
+    <div class="jumbotron" style="margin-top: 15px">
+        <h1>You dont like your current Situation? Complain at the right Places</h1>
+        <p>...</p>
+        <p>Complaing at the following places</p>
     </div>
 
-}
+
+    <div class="recommendation card" style="float:left">
+        <img class="card-img-top" src="~/images/politicans/jannjakobs.png" alt="Card image cap">
+        <div class="card-body">
+            <h3 class="card-title">Jann Jakobs</h3>
+            <hr />
+            <div class="card-content">
+                <p class="card-text">Oberbürgermeister Potsdam</p>
+                <ul>
+                    <li><a href="">Facebook</a></li>
+                    <li><a href="">Twitter</a></li>
+                    <li><a href="">Adresse</a></li>
+                </ul>
+                <p>
+                    Not enough? Use our automatically complain letter generator.<a href="~/letter.pdf" class="btn btn-primary" style="margin-top:5px">Print, sign, and send to Jann Jakobs</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="recommendation card" style="float:left">
+        <img class="card-img-top" src="~/images/politicans/step.png" alt="Card image cap">
+        <div class="card-body">
+            <h3 class="card-title">Stadtentsorgung Potsdam</h3>
+            <hr />
+            <div class="card-content">
+                <p class="card-text">Stadtensorgung</p>
+                <ul>
+                    <li><a href="">Facebook</a></li>
+                    <li><a href="">Twitter</a></li>
+                    <li><a href="">Adresse</a></li>
+                </ul>
+                <p>
+                    Not enough? Use our automatically complain letter generator.<a href="~/letter.pdf" class="btn btn-primary" style="margin-top:5px">Print, sign, and send to STEP</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    @*<div class="card">
+            <h3>@politican.Name</h3>
+            <p>This is one of the responsible Politicans for this Area. You would like to Complain? Contact him in one of the following channels:</p>
+            <a href="#">Twitter</a>
+            <a href="#">Facebook</a>
+            <a href="#">Phonenumber</a>
+            <p>
+                Adresse>:
+                @politican.Address
+            </p>
+
+            To much work? Press the complain Button with one Challenge
+            #Twitter
+            #Facebook
+            <p>    You really want to complain?</p>
+            <a href="">Here is a prewritten Letter. Just print, sign and send it.</a>
+        </div>*@
+
+
+</div>
 
 
 

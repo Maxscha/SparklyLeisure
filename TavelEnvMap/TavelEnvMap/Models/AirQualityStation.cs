@@ -8,7 +8,7 @@ namespace TavelEnvMap.Models
     public class AirQualityStation
     {
         public LatLng Position { get; set; }
-        public float AirQualityIndex { get; set; }
+        public double AirQualityIndex { get; set; }
         public string Source { get; set; }
     }
 }

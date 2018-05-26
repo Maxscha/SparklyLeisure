@@ -18,14 +18,14 @@ namespace TavelEnvMap.Controllers
         [HttpGet]
         public IActionResult Trash(float lan, float lng)
         {
-            var list = DataBaseHelper.GetEnvIssues(lan, lng);
+            var list = Database.DataBaseAccess.DataBase.GetEnvIssue();//DataBaseHelper.GetEnvIssues(lan, lng);
             return Json(list);
         }
 
         [HttpGet]
         public IActionResult AirQualityStations(float lat, float lng)
         {
-            var stations = DataBaseHelper.GetAirQualityStations(lat, lng);
+            var stations = Database.DataBaseAccess.DataBase.GetAirQuality();// DataBaseHelper.GetAirQualityStations(lat, lng);
             return Json(stations);
         }
 
@@ -39,7 +39,7 @@ namespace TavelEnvMap.Controllers
         [HttpGet]
         public IActionResult Leissure(float lat, float lng)
         {
-            var leissures = DataBaseHelper.GetLeisures(lat, lng);
+            var leissures = Database.DataBaseAccess.DataBase.GetLeisures();//DataBaseHelper.GetLeisures(lat, lng);
             return Json(leissures);
         }
     }

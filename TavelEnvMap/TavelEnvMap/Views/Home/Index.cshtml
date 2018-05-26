@@ -11,16 +11,36 @@
 
         function setNewHeatMap() {
             var heatMap = new google.maps.visualization.HeatmapLayer({
-                data: heatMapData
+                dissipating: true,
+                data: heatMapData,                
+                radius: 100
             });
+            /*heatMap.setOptions({
+                dissipating: false,
+            });*/
             heatMap.set('radius', 100);
-            heatMap.set('dissipating', false);
+            //heatMap.set('dissipating', false);
+            heatMap.set('maxIntensity', 100);
+            
             heatMap.setMap(map);
         }
 
         function getIconFromEnvIssueType(type) {
             if (type == 0) {
                 return '/images/icons/full-trash-container.png';
+            } else if (type == 1) {
+                return '/images/icons/shit.png';
+            } else if (type == 2) {
+                return '/images/icons/coffin.png';
+
+            }
+            return null;
+
+        }
+
+        function getIconFromLeissureType(type) {
+            if (type == 0) {
+                return 'images/icons/pool.png';
             }
             return null;
 
@@ -62,10 +82,11 @@
                         if (heatMap)
                             heatMap.setMap(null);
                         heatMapData.push(
-                            { location: new google.maps.LatLng(item.position.lat, item.position.lng), weight: 0.5 }
+                            { location: new google.maps.LatLng(item.position.lat, item.position.lng), weight: item.rating * 50 }
                         );
                     });
                     setNewHeatMap();
+                    loadAirStations(map);
                 });
         }
 
@@ -86,7 +107,8 @@
                         // Add a list item for the product.
                         var marker = new google.maps.Marker({
                             position: item.position,
-                            map: map
+                            map: map,
+                            icon: 'images/icons/factory.png'
                         });
                         marker.addListener('click', function () {
                             infowindow.open(map, marker);
@@ -98,6 +120,7 @@
                         );
                     });
                     setNewHeatMap();
+                    loadLeissures(map);
                 });
 
         }
@@ -131,17 +154,29 @@
                             content: contentString
                         });
                         // Add a list item for the product.
-                        var marker = new google.maps.Marker({
-                            position: item.position,
-                            map: map
-                        });
+
+                        var icon = getIconFromLeissureType(item.type);
+                        if (icon) {
+                            var marker = new google.maps.Marker({
+                                position: item.position,
+                                map: map,
+                                icon: icon
+                            });
+
+                        } else {
+                            var marker = new google.maps.Marker({
+                                position: item.position,
+                                map: map
+                            });
+                        }
                         marker.addListener('click', function () {
                             infowindow.open(map, marker);
                         });
                     });
                 });
+        };
 
-        }
+
 
         function getPoliticianAndShow(event) {
             var lat = event.latLng.lat();
@@ -167,30 +202,45 @@
             //alert("Lat=" + lat + "; Lng=" + lng);
         }
 
-        function initMap() {
-            map = new google.maps.Map(document.getElementById('map'), {
-                center: { lat: 52.520008, lng: 13.404954 },
-                zoom: 10
-            });
-            google.maps.event.addListener(map, "rightclick", function (event) {
-                getPoliticianAndShow(event);
-            });
-            loadEnvIssues(map);
-            loadAirStations(map);
-            loadLeissures(map);
+        function setCurrentLocation(map) {
+
             navigator.geolocation.getCurrentPosition(function (position) {
                 var pos = {
                     lat: position.coords.latitude,
                     lng: position.coords.longitude
                 };
-                var marker = new google.maps.Marker({
-                    position: pos,
-                    map: map,
-                    title: "You are here Location",
-                    //TODO ADD ICON
+                //var marker = new google.maps.Marker({
+                //    position: pos,
+                //    map: map,
+                //    title: "You are here Location",
+                //    //TODO ADD ICON
 
+                //});
+                map.setCenter(pos);
+                var currentPosition = new google.maps.Circle({
+                    strokeColor: '#4285F4',
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: '#4285F4',
+                    fillOpacity: 0.35,
+                    map: map,
+                    center: pos,
+                    radius: 40
                 });
             });
+        }
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 52.520008, lng: 13.404954 },
+                zoom: 14
+            });
+         /*   google.maps.event.addListener(map, "rightclick", function (event) {
+                getPoliticianAndShow(event);
+            });*/
+            loadEnvIssues(map);                        
+            loadLeissures(map);
+            setCurrentLocation(map);
 
             //infoWindow.setPosition(pos);
 
@@ -208,17 +258,34 @@
     <div class="col-xs-12">
         <div id="map" style="height:833px; width:100%"></div>
     </div>
-    <div class="recommendations">
+    <div class="recommendations card">
         <p>Based on your location and the current enviroment we recommend following outdoor activites:</p>
         <div class="recommendation card">
-            <img class="card-img-top" src="..." alt="Card image cap">
+            <img class="card-img-top" src="~/images/locations/wannsee.png" alt="Card image cap" onclick="map.setCenter(new google.maps.LatLng({lat:52.43801, lng:13.176051}))">
             <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
+                <h3 class="card-title">Wannsee</h3>
+                <hr />
+                <div class="card-content">
+                    <p class="card-text">The Wannsee is beatiful and clean. No current Enviromental issue was reported.</p>
+                    <a href="https://www.google.de/maps/dir//Wannsee,+14109+Berlin/" class="btn btn-primary">Direction</a>
+                </div>
             </div>
         </div>
-        <div class="recommendation"></div>
-
+        <div class="recommendation card">
+            <img class="card-img-top" src="~/images/locations/griebnitzsee.png" alt="Card image cap" onclick="map.setCenter(new google.maps.LatLng({lat:52.395758, lng:13.128123}))">
+            <div class="card-body">
+                <h3 class="card-title">Griebnitzsee</h3>
+                <hr />
+                <div class="card-content">
+                    <p class="card-text">The Griebnitzsee is currently really polluted and the Air Quality is bad.</p>
+                    <ul>
+                        <li>Air Quality Index at closest Station is at 60</li>
+                        <li>Trashbins are more then full</li>
+                        <li>There are dead fishes in the lake</li>
+                    </ul>
+                    <a href="/Complain" class="btn btn-danger">Complain at responsible politican</a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

@@ -50,13 +50,21 @@ namespace TavelEnvMap
             var politican = new Politician()
             {
                 Address = "TestAdress",
-                Authority = "Bezirksbürgermeister",
-                Name = "Arne Hendrick",
-                Number = "+491658432",
-                Url = "arnewäreguterpolitiker.de"
+                Authority = "Oberbürgermeister Potsdam",
+                Name = "Jann Jakobs",
+                Number = "+49123456789",
+                Url = "http://www.jann-jakobs.de/"
             };
             var politicians = new List<Politician>();
             politicians.Add(politican);
+            politicians.Add(new Politician()
+            {
+                Address = "TestAdress",
+                Authority = "Oberbürgermeister Potsdam",
+                Name = "Jann Jakobs",
+                Number = "+49123456789",
+                Url = "http://www.jann-jakobs.de/"
+            });
             return politicians.ToArray();
         }
 
@@ -77,13 +85,6 @@ namespace TavelEnvMap
         public static Leisure[] GetLeisures(float lat, float lng)
         {
             var leisures = new List<Leisure>();
-            leisures.Add(new Leisure()
-            {
-                Position = new LatLng(){
-                    Lat = 52.438010, Lng= 13.176051
-                },
-                Type = LeisureType.Swimming
-            });
             leisures.Add(new Leisure()
             {
                 Name = "Swimming @ Wannsee",
