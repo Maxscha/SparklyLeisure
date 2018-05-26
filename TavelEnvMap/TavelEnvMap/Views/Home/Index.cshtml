@@ -1,0 +1,45 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@section Scripts{
+    <script>
+        var map;
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 52.520008, lng: 13.404954 },
+                zoom: 8
+            });
+            var uri = 'api/map/trash';
+            $.getJSON(uri)
+                .done(function (data) {
+                    // On success, 'data' contains a list of products.
+                    console.log(data);
+                    $.each(data, function (key, item) {
+                        // Add a list item for the product.
+                        var marker = new google.maps.Marker({
+                            position: item.position,
+                            map: map
+                        });
+                        console.log(key)
+                        console.log(item);
+                    });
+                });
+            
+        }
+        $(
+            function() {
+               // initMap();
+            });
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyALyjjO3YRS7fQOO7w-EIYcRqjl_fdI_yc&callback=initMap"
+            async defer></script>
+}
+
+<div class="row">
+    <div class="col-xs-12">
+        <div id="map" style="height:1000px; width:1000px"></div>
+    </div>
+
+
+</div>
