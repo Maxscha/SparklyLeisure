@@ -13,37 +13,26 @@ namespace TavelEnvMap.Controllers
     //[Route("api/Map")]
     public class MapController : Controller
     {
-        static LatLng WannSee = new LatLng()
-        {
-            Lat = 52.436495,           
-            Lng = 13.178738
-        };
 
-        static LatLng WannSee2 = new LatLng()
-        {
-            Lat = 52.435495,
-            Lng = 13.178738
-        };
 
         [HttpGet]
         public IActionResult Trash(float lan, float lng)
         {
-            var issue = new EnvIssue();
-            issue.Position = WannSee;
-            issue.Rating = 3;
-            issue.Issue = Issue.Trash;
-
-            var issue2 = new EnvIssue()
-            {
-                Position = WannSee2,
-                Rating = 1,
-                Issue = Issue.Shit
-            };
-            //issue2.Position.Lat += 0.1 ;
-            var list = new List<EnvIssue>();
-            list.Add(issue);
-            list.Add(issue2);
+            var list = DataBaseHelper.GetEnvIssues(lan, lng);
             return Json(list);
+        }
+
+        [HttpGet]
+        public IActionResult AirQualityStations(float lat, float lng)
+        {
+            var stations = DataBaseHelper.GetAirQualityStations(lat, lng);
+            return Json(stations);
+        }
+
+        public IActionResult Politician(float lan, float lng)
+        {
+            var politicians = DataBaseHelper.GetPoliticans(lan, lng);
+            return Json(politicians);
         }
     }
 

@@ -3,13 +3,30 @@
 }
 
 @section Scripts{
+    <script src="~/js/TypeConverter.js"></script>
     <script>
+        var heatMapData = [];
+        var heatMap = null;
         var map;
-        function initMap() {
-            map = new google.maps.Map(document.getElementById('map'), {
-                center: { lat: 52.520008, lng: 13.404954 },
-                zoom: 8
+
+        function setNewHeatMap() {
+            var heatMap = new google.maps.visualization.HeatmapLayer({
+                data: heatMapData
             });
+            heatMap.set('radius', 100);
+            heatMap.set('dissipating', true);
+            heatMap.setMap(map);
+        }
+
+        function getIconFromEnvIssueType(type) {
+            if (type == 0) {
+                return '/images/icons/full-trash-container.png';
+            }
+            return null;
+
+        }
+
+        function loadEnvIssues(map) {
             var uri = 'api/map/trash';
             $.getJSON(uri)
                 .done(function (data) {
@@ -17,22 +34,117 @@
                     console.log(data);
                     $.each(data, function (key, item) {
                         // Add a list item for the product.
+                        var contentString = '<div id="content">' +
+                            convertType(item.issue) +
+                            '</div>';
+
+                        var infowindow = new google.maps.InfoWindow({
+                            content: contentString
+                        });
+                        var icon = getIconFromEnvIssueType(item.issue);
+                        if (icon) {
+                            var marker = new google.maps.Marker({
+                                position: item.position,
+                                map: map,
+                                icon: icon
+                            });
+
+                        } else {
+                            var marker = new google.maps.Marker({
+                                position: item.position,
+                                map: map
+                            });
+                        }
+
+                        marker.addListener('click', function () {
+                            infowindow.open(map, marker);
+                        });
+                        if (heatMap)
+                            heatMap.setMap(null);
+                        heatMapData.push(
+                            { location: new google.maps.LatLng(item.position.lat, item.position.lng), weight: 0.5 }
+                        );
+                    });
+                    setNewHeatMap();
+                });
+        }
+
+        function loadAirStations(map) {
+            var uri = 'api/map/AirQualityStations';
+            $.getJSON(uri)
+                .done(function (data) {
+                    // On success, 'data' contains a list of products.
+                    $.each(data, function (key, item) {
+                        // Add a list item for the product.
+                        var contentString = '<div id="content">' +
+                            "Air Quality Index:" + item.airQualityIndex +
+                            '</div>';
+
+                        var infowindow = new google.maps.InfoWindow({
+                            content: contentString
+                        });
+                        // Add a list item for the product.
                         var marker = new google.maps.Marker({
                             position: item.position,
                             map: map
                         });
-                        console.log(key)
-                        console.log(item);
+                        marker.addListener('click', function () {
+                            infowindow.open(map, marker);
+                        });
+                        if (heatMap)
+                            heatMap.setMap(null);
+                        heatMapData.push(
+                            { location: new google.maps.LatLng(item.position.lat, item.position.lng), weight: item.airQualityIndex }
+                        );
                     });
+                    setNewHeatMap();
                 });
-            
+
+        }
+
+        function getPoliticianAndShow(event) {
+            var lat = event.latLng.lat();
+            var lng = event.latLng.lng();
+            var uri = 'api/map/Politician';
+            $.getJSON(uri)
+                .done(function (data) {
+                    var contentString = '<div id="content">';
+                    // On success, 'data' contains a list of products.
+                    console.log(data);
+                    $.each(data, function (key, item) {
+                        contentString += "<span>" + item.name + "</span>";
+                        contentString += '<a href="/complain">Complain</a>';
+                    });
+
+                    contentString += "</div>"
+                    var infowindow = new google.maps.InfoWindow({
+                        content: contentString
+                    });
+                    infowindow.setPosition({ lat: event.latLng.lat(), lng: event.latLng.lng() });
+                    infowindow.open(map);
+                });
+            //alert("Lat=" + lat + "; Lng=" + lng);
+        }
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 52.520008, lng: 13.404954 },
+                zoom: 10
+            });
+            google.maps.event.addListener(map, "rightclick", function (event) {
+                getPoliticianAndShow(event);
+            });
+            loadEnvIssues(map);
+            loadAirStations(map);
+
+
         }
         $(
-            function() {
-               // initMap();
+            function () {
+                // initMap();
             });
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyALyjjO3YRS7fQOO7w-EIYcRqjl_fdI_yc&callback=initMap"
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyALyjjO3YRS7fQOO7w-EIYcRqjl_fdI_yc&callback=initMap&libraries=visualization"
             async defer></script>
 }
 
