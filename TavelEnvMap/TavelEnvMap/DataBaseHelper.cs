@@ -63,14 +63,51 @@ namespace TavelEnvMap
         public static AirQualityStation[] GetAirQualityStations(float lat, float lng)
         {
             var stations = new List<AirQualityStation>();
-            var station = new AirQualityStation();
-
-            station.AirQualityIndex = 49.1f;
-            station.Position = GrunewaldAirStation;
-            station.Source = "http://aqicn.org/?city=Germany/Berlin/Grunewald%283.5m%29";
+            var station = new AirQualityStation
+            {
+                AirQualityIndex = 49.1f,
+                Position = GrunewaldAirStation,
+                Source = "http://aqicn.org/?city=Germany/Berlin/Grunewald%283.5m%29"
+            };
 
             stations.Add(station);
             return stations.ToArray();
+        }
+
+        public static Leisure[] GetLeisures(float lat, float lng)
+        {
+            var leisures = new List<Leisure>();
+            leisures.Add(new Leisure()
+            {
+                Position = new LatLng(){
+                    Lat = 52.438010, Lng= 13.176051
+                },
+                Type = LeisureType.Swimming
+            });
+            leisures.Add(new Leisure()
+            {
+                Name = "Swimming @ Wannsee",
+                Position = new LatLng()
+                {
+                    Lat = 52.438010,
+                    Lng = 13.176051
+                },
+                Type = LeisureType.Swimming,
+                ToPolluted = true
+            });
+            leisures.Add(new Leisure()
+            {
+                Name = "Swimming @ Griebnitzsee",
+                Position = new LatLng()
+                {
+                    Lat = 52.395758,                    
+                    Lng = 13.128123
+                },
+                Type = LeisureType.Swimming
+            });
+
+            
+            return leisures.ToArray();
         }
     }
 }

@@ -29,10 +29,18 @@ namespace TavelEnvMap.Controllers
             return Json(stations);
         }
 
+        [HttpGet]
         public IActionResult Politician(float lan, float lng)
         {
             var politicians = DataBaseHelper.GetPoliticans(lan, lng);
             return Json(politicians);
+        }
+
+        [HttpGet]
+        public IActionResult Leissure(float lat, float lng)
+        {
+            var leissures = DataBaseHelper.GetLeisures(lat, lng);
+            return Json(leissures);
         }
     }
 

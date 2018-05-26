@@ -14,7 +14,7 @@
                 data: heatMapData
             });
             heatMap.set('radius', 100);
-            heatMap.set('dissipating', true);
+            heatMap.set('dissipating', false);
             heatMap.setMap(map);
         }
 
@@ -102,6 +102,47 @@
 
         }
 
+        function getInfoForLeissure(item) {
+            if (item.toPolluted) {
+                //Go somewhere else
+                return "Its bad here Griebnitzsee is better go swimming there";
+            }
+            else {
+                //Normal
+                var contentString = '<div id="content">' +
+                    item.name +
+                    '</div>';
+                return contentString;
+            }
+
+        }
+
+        function loadLeissures(map) {
+            var uri = 'api/map/Leissure';
+            $.getJSON(uri)
+                .done(function (data) {
+                    // On success, 'data' contains a list of products.
+                    $.each(data, function (key, item) {
+                        console.log(item);
+                        // Add a list item for the product.
+                        var contentString = getInfoForLeissure(item);
+
+                        var infowindow = new google.maps.InfoWindow({
+                            content: contentString
+                        });
+                        // Add a list item for the product.
+                        var marker = new google.maps.Marker({
+                            position: item.position,
+                            map: map
+                        });
+                        marker.addListener('click', function () {
+                            infowindow.open(map, marker);
+                        });
+                    });
+                });
+
+        }
+
         function getPoliticianAndShow(event) {
             var lat = event.latLng.lat();
             var lng = event.latLng.lng();
@@ -136,6 +177,7 @@
             });
             loadEnvIssues(map);
             loadAirStations(map);
+            loadLeissures(map);
 
 
         }
@@ -150,8 +192,6 @@
 
 <div class="row">
     <div class="col-xs-12">
-        <div id="map" style="height:1000px; width:1000px"></div>
+        <div id="map" style="height:833px; width:100%"></div>
     </div>
-
-
 </div>

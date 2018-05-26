@@ -2,5 +2,24 @@
 
 <h2>You dont like your current Situation? Complain at the relevant Politican</h2>
 
-@Model.Politician[0].Name
+@foreach(var politican in Model.Politician)
+{
+    <div>
+        This is one of the responsible Politicans for this Area. You would like to Complain? Contact him in one of the following channels:
+        # Twitter
+        # Facebook
+        # Phonenumber
+        # Adress
+
+        To much work? Press the complain Button with one Challenge
+        #Twitter
+        #Facebook
+
+        You really want to complain?
+        - Here is a prewritten Letter. Just print, sign and send it.
+    </div>
+
+}
+
+
 
