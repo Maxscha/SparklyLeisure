@@ -85,7 +85,7 @@ public class IssueCreationFragment extends DialogFragment implements LocationLis
 
 
 
-    Issue currentIssue = new Issue();
+    Issue currentIssue;
 
     private OnIssueCreationListener mListener;
     private Uri imageUri;
@@ -129,6 +129,11 @@ public class IssueCreationFragment extends DialogFragment implements LocationLis
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View rootView = getActivity().getLayoutInflater().inflate(R.layout.fragment_issue_creation, null);
 
+        currentIssue = new Issue();
+        currentIssue.setLat(52.391820);
+        currentIssue.setLon(13.123831);
+        currentIssue.setRating(1);
+
         badnessRatingBar = new RatingBar(getContext());
         badnessLoadingBar = new ProgressBar(getContext());
         badnessLoadingBar.setIndeterminate(true);
@@ -136,7 +141,7 @@ public class IssueCreationFragment extends DialogFragment implements LocationLis
 
         ButterKnife.bind(this, rootView);
 
-        issueTypeSpinner.setAdapter(new ArrayAdapter<>(this.getContext(), android.R.layout.simple_spinner_item, IssueType.values()));
+        issueTypeSpinner.setAdapter(new ArrayAdapter<>(this.getContext(), R.layout.issue_type_spinner_item, R.id.spinnerItem,IssueType.values()));
         issueTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -198,12 +203,7 @@ public class IssueCreationFragment extends DialogFragment implements LocationLis
             .setPositiveButton("Post", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface arg0, int arg1) {
-                    postIssue(
-                        currentIssue.getType(),
-                        currentIssue.getRating(),
-                        currentIssue.getLon(),
-                        currentIssue.getLat()
-                    );
+                    postIssue();
                 }
             })
             .create();
@@ -280,26 +280,33 @@ public class IssueCreationFragment extends DialogFragment implements LocationLis
         }
     }
 
-    private void postIssue(String type, int rating, double lon, double lat) {
+    private void postIssue() {
+        String type = currentIssue.getType();
+        float rating = currentIssue.getRating();
+        double lon = currentIssue.getLon();
+        double lat = currentIssue.getLat();
 
-        RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), imageFile);
-        MultipartBody.Part body = MultipartBody.Part.createFormData("upload", imageFile.getName(), reqFile);
-        RequestBody typePart = RequestBody.create(MediaType.parse("text/plain"), type);
-        RequestBody ratingPart = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(rating));
-        RequestBody lonPart = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(lon));
-        RequestBody latPart = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(lat));
+        MultipartBody.Part body = null;
+        RequestBody reqFile = RequestBody.create(MediaType.parse("multipart/form-data"), imageFile);
+        body = MultipartBody.Part.createFormData("image", imageFile.getName(), reqFile);
 
-        ApiUtils.getAPIService().saveIssue(body, typePart, ratingPart, lonPart, latPart).enqueue(new Callback<Issue>() {
+        RequestBody typePart = RequestBody.create(MediaType.parse("multipart/form-data"), type);
+        RequestBody ratingPart = RequestBody.create(MediaType.parse("multipart/form-data"), String.valueOf(rating));
+        RequestBody lonPart = RequestBody.create(MediaType.parse("multipart/form-data"), String.valueOf(lon));
+        RequestBody latPart = RequestBody.create(MediaType.parse("multipart/form-data"), String.valueOf(lat));
+
+        ApiUtils.getAPIService().saveIssue(body, typePart, ratingPart, lonPart, latPart).enqueue(new Callback<Boolean>() {
             @Override
-            public void onResponse(@NonNull Call<Issue> call, @NonNull Response<Issue> response) {
+            public void onResponse(@NonNull Call<Boolean> call, @NonNull Response<Boolean> response) {
                 if (response.isSuccessful()) {
                     Log.i("issue poster", "post submitted to API." + response.body().toString());
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<Issue> call, @NonNull Throwable t) {
-                Log.e("issue poster", "Unable to submit post to API.");
+            public void onFailure(@NonNull Call<Boolean> call, @NonNull Throwable t) {
+                t.printStackTrace();
+                Log.e("issue poster", "Unable to submit post to API");
             }
         });
     }

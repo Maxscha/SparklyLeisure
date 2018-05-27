@@ -11,8 +11,8 @@ import retrofit2.http.Part;
 
 public interface APIService {
     @Multipart
-    @POST("/posts")
-    Call<Issue> saveIssue(@Part MultipartBody.Part image,
+    @POST("/api/map/putdata")
+    Call<Boolean> saveIssue(@Part MultipartBody.Part image,
                           @Part("type") RequestBody type,
                          @Part("rating") RequestBody rating,
                          @Part("lon") RequestBody lon,
