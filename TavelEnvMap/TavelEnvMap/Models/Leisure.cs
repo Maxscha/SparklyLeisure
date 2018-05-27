@@ -11,6 +11,7 @@ namespace TavelEnvMap.Models
     }
     public class Leisure
     {
+        public int Id { get; set; }
         public bool ToPolluted { get; set; }
         public String Name { get; set; }
         public LatLng Position { get; set; }

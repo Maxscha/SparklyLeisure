@@ -42,6 +42,19 @@ namespace TavelEnvMap.Controllers
             var leissures = Database.DataBaseAccess.DataBase.GetLeisures();//DataBaseHelper.GetLeisures(lat, lng);
             return Json(leissures);
         }
+
+        [HttpGet]
+        public IActionResult CoalPlant(float lat, float lng)
+        {
+            var leissures = Database.DataBaseAccess.DataBase.GetCoal();//DataBaseHelper.GetLeisures(lat, lng);
+            return Json(leissures);
+        }
+
+        [HttpPost]
+        public IActionResult PutData(dynamic all)
+        {
+            return Json(true);
+        }
     }
 
 

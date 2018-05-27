@@ -54,10 +54,11 @@
                     console.log(data);
                     $.each(data, function (key, item) {
                         // Add a list item for the product.
-                        var contentString = '<div id="content">' +
+                        /*var contentString = '<div id="content">' +
                             convertType(item.issue) +
                             '</div>';
-
+                            */
+                        var contentString = getInfoEnvIssue(item);
                         var infowindow = new google.maps.InfoWindow({
                             content: contentString
                         });
@@ -108,7 +109,7 @@
                         var marker = new google.maps.Marker({
                             position: item.position,
                             map: map,
-                            icon: 'images/icons/factory.png'
+                            icon: 'images/icons/mess.png'
                         });
                         marker.addListener('click', function () {
                             infowindow.open(map, marker);
@@ -125,18 +126,101 @@
 
         }
 
+        function loadCoal(map) {
+            var uri = 'api/map/CoalPlant';
+            $.getJSON(uri)
+                .done(function (data) {
+                    // On success, 'data' contains a list of products.
+                    $.each(data, function (key, item) {
+                        // Add a list item for the product.
+                        var contentString = '<div id="content">' +                            
+                        "<p>Name:" + item.name + '</p>' + 
+                                '<p>Current emission:' + item.cO2 + "</p>" + 
+                            '</div>';
+
+                        var infowindow = new google.maps.InfoWindow({
+                            content: contentString
+                        });
+                        // Add a list item for the product.
+                        var marker = new google.maps.Marker({
+                            position: item.position,
+                            map: map,
+                            icon: 'images/icons/factory.png'
+                        });
+                        marker.addListener('click', function () {
+                            infowindow.open(map, marker);
+                        });
+                        if (heatMap)
+                            heatMap.setMap(null);
+                        heatMapData.push(
+                            { location: new google.maps.LatLng(item.position.lat, item.position.lng), weight: item.cO2 / 55072 * 100 }
+                        );
+                    });
+                    setNewHeatMap();
+                });
+
+        }
+
+        function getImgForEnvIssue(item) {
+            if (item.id == 0) {
+                //Trash
+            } else if (item.id == 1) {
+                //Dead fishes
+            } else if (item.id == 2) {
+                //Is example from Arne
+
+            }
+            return //default;
+        }
+
+        function getInfoEnvIssue(item) {
+            var content = '<h3>' + convertType(item.issue) + '</h3>' +
+                '<p>Following issue was reported by Arne Hendrick around 9am</p>' +
+                '<img src="' + getImgForEnvIssue(item) + '">';
+            return content;
+
+        }
+
         function getInfoForLeissure(item) {
-            if (item.toPolluted) {
+            if (item.id == 0) {
                 //Go somewhere else
-                return "Its bad here Griebnitzsee is better go swimming there";
-            }
-            else {
-                //Normal
-                var contentString = '<div id="content">' +
-                    item.name +
+                var t = '<div class="">' +
+                    '<img class="card-img-top" src="/images/locations/wannsee.png" alt="Card image cap" onclick="map.setCenter(new google.maps.LatLng({lat:52.43801, lng:13.176051}))">' +
+                    '<div class="card-body">' +
+                    '<h3 class="card-title">Wannsee</h3>' +
+                    '<hr />' +
+                    '<div class="card-content">' +
+                    ' <p class="card-text">The Wannsee is beatiful and clean. No current Enviromental issue was reported.</p>' +
+                    '<a href="https://www.google.de/maps/dir//Wannsee,+14109+Berlin/" class="btn btn-primary">Direction</a>' +
+                    '</div>' +
                     '</div>';
-                return contentString;
+                return t;
             }
+            else if(item.id == 1){
+                var l =
+                    '<div class="">' + 
+                    '<img class="card-img-top" src="/images/locations/griebnitzsee.png" alt="Card image cap" onclick="map.setCenter(new google.maps.LatLng({lat:52.395758, lng:13.128123}))">' +
+                        '<div class="card-body">' +
+                            '<h3 class="card-title">Griebnitzsee</h3>' +
+                            '<hr />' +
+                            '<div class="card-content">' +
+                                '<p class="card-text">The Griebnitzsee is currently really polluted and the Air Quality is bad.</p>' +
+                                '<ul>' +
+                                    '<li>Air Quality Index at closest Station is at 60</li>' +
+                                    '<li>Trashbins are more then full</li>' +
+                                    '<li>There are dead fishes in the lake</li>' +
+                                '</ul>' +
+                                '<a href="/Complain" class="btn btn-danger">Complain at responsible politican</a>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>';
+                return l;
+
+            } 
+            var contentString = '<div id="content">' +
+                item.name +
+                '</div>';
+            return contentString;
 
         }
 
@@ -173,6 +257,7 @@
                             infowindow.open(map, marker);
                         });
                     });
+                    loadCoal(map);
                 });
         };
 
@@ -204,10 +289,12 @@
 
         function setCurrentLocation(map) {
 
-            navigator.geolocation.getCurrentPosition(function (position) {
+            //navigator.geolocation.getCurrentPosition(function (position) {
                 var pos = {
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude
+                //    lat: position.coords.latitude,
+                  //  lng: position.coords.longitude
+                    lat: 52.394059,
+                    lng: 13.132414
                 };
                 //var marker = new google.maps.Marker({
                 //    position: pos,
@@ -227,7 +314,7 @@
                     center: pos,
                     radius: 40
                 });
-            });
+            //});
         }
 
         function initMap() {
@@ -259,7 +346,25 @@
         <div id="map" style="height:833px; width:100%"></div>
     </div>
     <div class="recommendations card">
-        <p>Based on your location and the current enviroment we recommend following outdoor activites:</p>
+        <p>Around your location:</p>
+        <div class="recommendation card">
+            <img class="card-img-top" src="~/images/locations/griebnitzsee.png" alt="Card image cap" onclick="map.setCenter(new google.maps.LatLng({lat:52.395758, lng:13.128123}))">
+            <div class="card-body">
+                <h3 class="card-title">Griebnitzsee</h3>
+                <hr />
+                <div class="card-content">
+                    <p class="card-text">The Griebnitzsee is currently really polluted and the Air Quality is bad.</p>
+                    <ul>
+                        <li>Air Quality Index at closest Station is at 60</li>
+                        <li>Closest coal plant is reporting high emmissions</li>
+                        <li>Trashbins are more then full</li>
+                        <li>There are dead fishes in the lake</li>
+                    </ul>
+                    <p> Our recommendation? Stay Green! Going to the Wannsee only takes around 10 min longer and its more clean there!</p>
+                    <a href="/Complain" class="btn btn-danger">Complain at responsible politican</a>
+                </div>
+            </div>
+        </div>
         <div class="recommendation card">
             <img class="card-img-top" src="~/images/locations/wannsee.png" alt="Card image cap" onclick="map.setCenter(new google.maps.LatLng({lat:52.43801, lng:13.176051}))">
             <div class="card-body">
@@ -271,21 +376,6 @@
                 </div>
             </div>
         </div>
-        <div class="recommendation card">
-            <img class="card-img-top" src="~/images/locations/griebnitzsee.png" alt="Card image cap" onclick="map.setCenter(new google.maps.LatLng({lat:52.395758, lng:13.128123}))">
-            <div class="card-body">
-                <h3 class="card-title">Griebnitzsee</h3>
-                <hr />
-                <div class="card-content">
-                    <p class="card-text">The Griebnitzsee is currently really polluted and the Air Quality is bad.</p>
-                    <ul>
-                        <li>Air Quality Index at closest Station is at 60</li>
-                        <li>Trashbins are more then full</li>
-                        <li>There are dead fishes in the lake</li>
-                    </ul>
-                    <a href="/Complain" class="btn btn-danger">Complain at responsible politican</a>
-                </div>
-            </div>
-        </div>
+
     </div>
 </div>

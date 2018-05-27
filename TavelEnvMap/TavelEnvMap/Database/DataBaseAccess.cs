@@ -27,6 +27,7 @@ namespace TavelEnvMap.Database
             var connString = "Host=localhost;Username=postgres;Password=admin;Database=postgres";
             var connection = new NpgsqlConnection(connString);
             connection.Open();
+            var i = 0;
             using (var cmd = new NpgsqlCommand("SELECT * FROM environmental_issues", connection))
             {
                 using (var reader = cmd.ExecuteReader())
@@ -34,6 +35,7 @@ namespace TavelEnvMap.Database
                     {
                         var t = new EnvIssue()
                         {
+                            Id = i,
                             Rating = reader.GetDouble(4),
                             Issue = (Issue)Convert.ToInt32(reader.GetString(0)),
                             Position = new LatLng()
@@ -42,11 +44,43 @@ namespace TavelEnvMap.Database
                                 Lng = reader.GetDouble(2)
                             }
                         };
+                        i++;
                         issues.Add(t);
                     }
             }
 
             return issues;
+        }
+
+        public IEnumerable<CoalPlant> GetCoal()
+        {
+            var plant = new List<CoalPlant>();
+            var connString = "Host=localhost;Username=postgres;Password=admin;Database=postgres";
+            var connection = new NpgsqlConnection(connString);
+            connection.Open();
+            var i = 0;
+            using (var cmd = new NpgsqlCommand("SELECT * FROM coal_power_plant", connection))
+            {
+                using (var reader = cmd.ExecuteReader())
+                    while (reader.Read())
+                    {
+                        var t = new CoalPlant()
+                        {
+                            
+                            Position = new LatLng()
+                            {
+                                Lat = reader.GetDouble(1),
+                                Lng = reader.GetDouble(0)
+                            },
+                            Name = reader.GetString(2),
+                            CO2 = reader.GetDouble(3)
+                        };
+                        i++;
+                        plant.Add(t);
+                    }
+            }
+
+            return plant;
         }
 
         public IEnumerable<Leisure> GetLeisures()
@@ -55,6 +89,7 @@ namespace TavelEnvMap.Database
             var connString = "Host=localhost;Username=postgres;Password=admin;Database=postgres";
             var connection = new NpgsqlConnection(connString);
             connection.Open();
+            var i = 0;
             using (var cmd = new NpgsqlCommand("SELECT * FROM leisure", connection))
              {
                  using (var reader = cmd.ExecuteReader())
@@ -62,6 +97,7 @@ namespace TavelEnvMap.Database
                      {
                          var t = new Leisure()
                          {
+                             Id=i,
                          Name = reader.GetString(7),
                          Type = (LeisureType)Convert.ToInt32(reader.GetString(1)),
                          Position = new LatLng()
@@ -70,6 +106,7 @@ namespace TavelEnvMap.Database
                              Lng = reader.GetDouble(3)
                          }
                          };
+                        i++;
                         leisures.Add(t);
                      }
              }
