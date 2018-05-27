@@ -7,6 +7,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.8" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="Npgsql" Version="3.2.7" />
   </ItemGroup>
 
@@ -16,8 +17,6 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\images\locations\" />
-    <Folder Include="wwwroot\images\issues\" />
-	 <Folder Include="wwwroot\images\issues\" />
   </ItemGroup>
     <ItemGroup>
     <Content Update="appsettings.json">
@@ -32,9 +31,6 @@
     <Content Update="wwwroot">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-      <Folder Include="wwwroot\" />
   </ItemGroup>
 
 </Project>

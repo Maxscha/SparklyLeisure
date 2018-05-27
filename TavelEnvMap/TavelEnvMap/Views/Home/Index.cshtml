@@ -10,15 +10,18 @@
         var map;
 
         function setNewHeatMap() {
+            var gradient = ['rgba(253, 165, 2, 0)', 'rgba(253, 165, 2, 0.33)', 'rgba(253, 165, 2, 0.5)','rgba(230, 0, 0, 0.7)'];
             var heatMap = new google.maps.visualization.HeatmapLayer({
-                dissipating: true,
+                dissipating: false,
                 data: heatMapData,                
-                radius: 100
+                radius: 100,
+                gradient: gradient
             });
             /*heatMap.setOptions({
                 dissipating: false,
             });*/
             heatMap.set('radius', 100);
+            //heatmap.set('gradient', 
             //heatMap.set('dissipating', false);
             heatMap.set('maxIntensity', 100);
             
@@ -163,14 +166,17 @@
 
         function getImgForEnvIssue(item) {
             if (item.id == 0) {
+                return "/images/issues/dead.png";
                 //Trash
+
             } else if (item.id == 1) {
+                return "/images/issues/trash.png"; 
                 //Dead fishes
             } else if (item.id == 2) {
                 //Is example from Arne
 
             }
-            return //default;
+            return "/images/issues/trash.png";  //default;
         }
 
         function getInfoEnvIssue(item) {
@@ -336,6 +342,10 @@
             function () {
                 // initMap();
             });
+        function setLocation(latlng) {
+            map.setCenter(latlng); map.setZoom(17)
+
+        }
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyALyjjO3YRS7fQOO7w-EIYcRqjl_fdI_yc&callback=initMap&libraries=visualization"
             async defer></script>
@@ -348,7 +358,7 @@
     <div class="recommendations card">
         <p>Around your location:</p>
         <div class="recommendation card">
-            <img class="card-img-top" src="~/images/locations/griebnitzsee.png" alt="Card image cap" onclick="map.setCenter(new google.maps.LatLng({lat:52.395758, lng:13.128123}))">
+            <img class="card-img-top" src="~/images/locations/griebnitzsee.png" alt="Card image cap" onclick="setLocation(new google.maps.LatLng({ lat: 52.395758, lng: 13.128123 }))">
             <div class="card-body">
                 <h3 class="card-title">Griebnitzsee</h3>
                 <hr />
@@ -366,7 +376,7 @@
             </div>
         </div>
         <div class="recommendation card">
-            <img class="card-img-top" src="~/images/locations/wannsee.png" alt="Card image cap" onclick="map.setCenter(new google.maps.LatLng({lat:52.43801, lng:13.176051}))">
+            <img class="card-img-top" src="~/images/locations/wannsee.png" alt="Card image cap" onclick="setLocation(new google.maps.LatLng({lat:52.43801, lng:13.176051}))">
             <div class="card-body">
                 <h3 class="card-title">Wannsee</h3>
                 <hr />
