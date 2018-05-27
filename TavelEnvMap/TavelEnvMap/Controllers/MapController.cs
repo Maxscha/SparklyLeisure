@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -53,6 +54,12 @@ namespace TavelEnvMap.Controllers
         [HttpPost]
         public IActionResult PutData(dynamic all)
         {
+            Console.WriteLine(all);
+            //Console.WriteLine(Json(all));
+           /* foreach (PropertyDescriptor prop in TypeDescriptor.GetProperties(all))
+            {
+                Console.WriteLine(prop.Name);
+            }*/
             return Json(true);
         }
     }

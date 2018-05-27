@@ -7,6 +7,7 @@ namespace TavelEnvMap.Models
 {
     public class CoalPlant
     {
+
         public LatLng Position { get; set; }
         public String Name { get; set; }
         public double CO2 { get; set; }

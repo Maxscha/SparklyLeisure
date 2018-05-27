@@ -20,6 +20,8 @@ namespace TavelEnvMap
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
+                //.UseUrls("http://localhost:5000", "http://192.168.1.121:5000")
+                .UseUrls("http://*:5000")
                 .Build();
     }
 }
