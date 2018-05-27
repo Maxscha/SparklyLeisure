@@ -52,16 +52,24 @@ namespace TavelEnvMap.Controllers
         }
 
         [HttpPost]
-        public IActionResult PutData(dynamic all)
+        public IActionResult PutData(dynamic test)
         {
+            Console.WriteLine("Its something");
+            //Console.WriteLine(rating);
+            //Console.WriteLine(image.Length);
+            Database.DataBaseAccess.DataBase.PutFakeIssueIn();
+            return Json(true);
+        }
+        /*{
             Console.WriteLine(all);
+            Newtonsoft.Json.JsonSerializer.Create().S
             //Console.WriteLine(Json(all));
            /* foreach (PropertyDescriptor prop in TypeDescriptor.GetProperties(all))
             {
                 Console.WriteLine(prop.Name);
             }*/
-            return Json(true);
-        }
+            //return Json(true);
+        //}*/
     }
 
 

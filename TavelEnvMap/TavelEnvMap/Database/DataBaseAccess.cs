@@ -162,7 +162,21 @@ namespace TavelEnvMap.Database
                     }
             }
 
+            
+
             return stations;
+        }
+
+        public void PutFakeIssueIn()
+        {
+            var connString = "Host=localhost;Username=postgres;Password=admin;Database=postgres";
+            var connection = new NpgsqlConnection(connString);
+            connection.Open();
+            var i = 0;
+            using (var cmd = new NpgsqlCommand("INSERT INTO \"public\".\"environmental_issues\" (\"type\", \"latitude\", \"longitude\", \"timestamp\", \"level\", \"image\") VALUES ('0', 52.435388, 13.179835, '2018-05-27 15:00:00.000000', 0.3, NULL)", connection))
+            {
+                cmd.ExecuteNonQuery();
+            }
         }
 
 
