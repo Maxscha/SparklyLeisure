@@ -9,12 +9,14 @@ namespace TavelEnvMap.Models
     public enum Issue
     {
         Trash,
-        Shit
+        Shit,
+        Dead
     }
     public class EnvIssue
     {
+        public int Id { get; set; }
         public LatLng Position { get; set; }
-        public int Rating { get; set; }
+        public double Rating { get; set; }
         public Issue Issue { get; set; }
     }
 }

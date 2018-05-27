@@ -4,5 +4,5 @@
     else if (value == 1)
         return "Shit";
     else
-        return "Not Defined";
+        return "Dead animal";
 }

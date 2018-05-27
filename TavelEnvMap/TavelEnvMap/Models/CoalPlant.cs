@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace TavelEnvMap.Models
 {
-    public class AirQualityStation
+    public class CoalPlant
     {
+
         public LatLng Position { get; set; }
-        public double AirQualityIndex { get; set; }
-        public string Source { get; set; }
+        public String Name { get; set; }
+        public double CO2 { get; set; }
     }
 }
-
